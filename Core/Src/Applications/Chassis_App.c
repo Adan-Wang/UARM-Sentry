@@ -23,7 +23,7 @@ void Chassis_Task_Func(void const * argument)
   {
 
 	 // Forever loop
-	  motor_move_period(cycles_s, vel, direction);
+	  //motor_move_period(cycles_s, vel, direction);
 	  first_loop=0;
 
   }

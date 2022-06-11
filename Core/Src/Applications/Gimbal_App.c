@@ -154,10 +154,10 @@ void Gimbal_Task_Function(void const * argument)
 	  		  }
 
 	  		  if(sweep_dir==-1){
-	  			Motor_pid_set_angle(&motor_data[4],runtime_yaw_max,0.2*vmax/max_angle,0,0);
+	  			Motor_pid_set_angle(&motor_data[4],runtime_yaw_max,0.5*vmax/max_angle,0,0);
 	  		  }
 	  		  else{
-	  			Motor_pid_set_angle(&motor_data[4],runtime_yaw_min,0.2*vmax/max_angle,0,0);
+	  			Motor_pid_set_angle(&motor_data[4],runtime_yaw_min,0.5*vmax/max_angle,0,0);
 	  		  }
 
 
@@ -244,6 +244,7 @@ void Gimbal_Task_Function(void const * argument)
 			  }
 			  else if (comm_pack.pack_cond==PACKERR){
 				  HAL_GPIO_WritePin(GPIOG, LD_F_Pin, RESET);
+
 
 				  //buzzer_play_mario(120);
 			  }
@@ -421,6 +422,12 @@ int32_t parse_pack_indv(char* pack, int pos, int lens){
 			for(int i=0; i<lens; i++){
 	            data += (int32_t)((pdata_temp[pos-i-1-2] - '0')*pow(10,i)); // decoding, referring to the vision code.
 			}
+
+			if (pdata_temp[pos-lens-2]=='0'){
+				data=-data;
+			}
+
+
 	    //}
 		//else{
 			//data = -1;

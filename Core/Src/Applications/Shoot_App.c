@@ -30,6 +30,7 @@ void Shoot_Task_Func(void const * argument)
   double fric_wheel_speed_percent=5;
   double mag_load_speed_percent=10;
   int16_t input=500;
+  int16_t shoot_counter=-1;
   //buzzer_play_o_canada(300);
 
 
@@ -42,9 +43,19 @@ void Shoot_Task_Func(void const * argument)
 //			input=500;
 //		}
 	  //cmd_execute_shoot(mag_load_speed_percent,fric_wheel_speed_percent);
-	  if(comm_pack.target_num ==1){
+
+	  if(comm_pack.fire_cmd ==1 && comm_pack.target_num==1){
 		  buzzer_play_c1(100);
 		  cmd_execute_shoot(mag_load_speed_percent,fric_wheel_speed_percent);
+		  shoot_counter=TGT_CONSTANT; //Shoot for atleast 1 second before stopping
+	  }
+
+	  if(shoot_counter>0){
+		  shoot_counter--;
+	  }
+	  else{
+		  cmd_execute_shoot(0,0);
+
 	  }
 
 	  //Shoot motor on half speed
