@@ -41,7 +41,7 @@ void Shoot_Task_Func(void const * argument)
 //		if(input==1000){
 //			input=500;
 //		}
-	  cmd_execute_shoot(mag_load_speed_percent,fric_wheel_speed_percent);
+	  //cmd_execute_shoot(mag_load_speed_percent,fric_wheel_speed_percent);
 	  if(comm_pack.target_num ==1){
 		  buzzer_play_c1(100);
 		  cmd_execute_shoot(mag_load_speed_percent,fric_wheel_speed_percent);

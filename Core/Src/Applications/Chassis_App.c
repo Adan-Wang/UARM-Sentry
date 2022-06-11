@@ -12,17 +12,19 @@ void Chassis_Task_Func(void const * argument)
 {
 
   /* USER CODE BEGIN Chassis_Task_Func */
-	buzzer_play_mario(400);
+	buzzer_play_mario(300);
 
 
   int32_t direction = CLOCKWISE; // direction of motor
-  double vel = 1000; //Velocity of motor
-  uint32_t cycles_s=5; //Time period is 1 seconds per cycle, 5=5 cycles=5s, the timer is controlled by TIM13
+  double vel = 1250; //Velocity of motor
+  uint32_t cycles_s=2; //Time period is 1 seconds per cycle, 5=5 cycles=5s, the timer is controlled by TIM13
+  first_loop=1;
   for(;;)
   {
 
 	 // Forever loop
 	  motor_move_period(cycles_s, vel, direction);
+	  first_loop=0;
 
   }
 }
@@ -40,6 +42,7 @@ void Chassis_Task_Func(void const * argument)
  */
 void motor_move_period(uint32_t cycles, double vel, int32_t initial_direction){
 	int32_t direction;
+	//buzzer_play_c1(100);
 
 	//If first loop
 	if (first_loop){
@@ -51,6 +54,7 @@ void motor_move_period(uint32_t cycles, double vel, int32_t initial_direction){
 	//TIMEBASE = (APBxTIMCLK / (Prescaler + 1)) / (Period + 1) (Hertz)
 	//currently set 1 Hz, if want 0.1s, set Prescaler of TIM13 to 839 (10 Hz)
 	if(direction == CLOCKWISE){
+		//buzzer_play_c1(100);
 		HAL_GPIO_WritePin(LD_A_GPIO_Port,LD_A_Pin,GPIO_PIN_RESET);
 		HAL_GPIO_WritePin(LD_B_GPIO_Port,LD_B_Pin,GPIO_PIN_SET);
 		// Clockwise Direction
@@ -61,6 +65,8 @@ void motor_move_period(uint32_t cycles, double vel, int32_t initial_direction){
 		}
 	}
 	if(direction == COUNTER_CLOCKWISE){
+		HAL_GPIO_WritePin(LD_A_GPIO_Port,LD_A_Pin,GPIO_PIN_SET);
+		HAL_GPIO_WritePin(LD_B_GPIO_Port,LD_B_Pin,GPIO_PIN_RESET);
 		// Counter Clockwise Direction
 		if (period_counter >= cycles){
 			period_counter = 0;

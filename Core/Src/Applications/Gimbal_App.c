@@ -259,8 +259,9 @@ void Gimbal_Task_Function(void const * argument)
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
 	 // When enter this callback function, the variable pdata has been filled with the received data.
 	 // Thus parse it directly.
-	  //HAL_UART_Transmit(&husart6, 'Inter',5,0xFFFF);
+	  HAL_UART_Transmit(&huart7, 'Inter',5,0xFFFF);
 	  HAL_GPIO_TogglePin(GPIOG, LD_H_Pin);
+	  HAL_UART_Transmit(&huart7, (char*)pdata, PACKLEN,0xFFFF);
 	  comm_pack=parse_all(pdata);
 	  abs_yaw=angle_preprocess(&motor_data[4], comm_pack.yaw_data);
 	  abs_pitch=angle_preprocess(&motor_data[5], comm_pack.pitch_data);

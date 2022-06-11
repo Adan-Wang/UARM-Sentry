@@ -38,7 +38,7 @@ PUTCHAR_PROTOTYPE
 {
   /* Place your implementation of fputc here */
   /* e.g. write a character to the EVAL_COM1 and Loop until the end of transmission */
-  HAL_UART_Transmit(&husart6, (uint8_t *)&ch, 1, 0xFFFF);
+  HAL_UART_Transmit(&huart7, (uint8_t *)&ch, 1, 0xFFFF);
 
   return ch;
 }
@@ -142,7 +142,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
 	//USART6 Interrput Init
 	HAL_NVIC_SetPriority(USART6_IRQn,5,0);
 	HAL_NVIC_EnableIRQ(USART6_IRQn);
-	printf("initialized usart 6 via the uart function");
+	printf("initialized usart 6 via the uart function \r \n");
   /* USER CODE END UART7_MspInit 1 */
   }
 }

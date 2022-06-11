@@ -14,7 +14,7 @@
 #include "../buzzer.h"
 #include "../Device/Motor.h"
 
-#define PACKLEN  16
+#define PACKLEN  64
 #define DATALEN  4
 #define STATELEN 1
 #define PACKCOR 0
@@ -31,8 +31,8 @@
 #define PITCH_MAX_HALF_DELTA 45
 #define MAX_PITCH_CHANGE_TIME 5
 #define MAX_YAW_CHANGE_TIME 3
-#define FRONT_ANGLE 140 //Hard set front and back angles
-#define BACK_ANGLE 280
+#define FRONT_ANGLE 280 //Hard set front and back angles
+#define BACK_ANGLE 140
 
 #define YAW_POS 6
 #define PITCH_POS YAW_POS+DATALEN
