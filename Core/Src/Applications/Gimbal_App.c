@@ -237,10 +237,14 @@ void Gimbal_Task_Function(void const * argument)
 //					  abs_pitch=runtime_pitch_min;
 //				  }
 
+				  //printf("yaw: %d pitch: %d \r \n", (int16_t)abs_yaw, (int16_t)abs_pitch);
 				  Motor_pid_set_angle(&motor_data[4], abs_yaw, vmax/max_angle,0,0);
 				  Motor_pid_set_angle(&motor_data[5], abs_pitch, vmax/max_angle,0,0);
+				  comm_pack.target_num=0;
 			  }
 			  else if (comm_pack.pack_cond==PACKERR){
+				  HAL_GPIO_WritePin(GPIOG, LD_F_Pin, RESET);
+
 				  //buzzer_play_mario(120);
 			  }
 
@@ -250,6 +254,8 @@ void Gimbal_Task_Function(void const * argument)
 	  	  }
 		  //Motor_pid_set_angle(&motor_data[4], abs_yaw, vmax/max_angle,0,0);
 		  //Motor_pid_set_angle(&motor_data[5], abs_pitch, vmax/max_angle,0,0);
+
+	  	//osDelay(1000);
 		  osDelay(1);
   }
 
@@ -259,7 +265,7 @@ void Gimbal_Task_Function(void const * argument)
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
 	 // When enter this callback function, the variable pdata has been filled with the received data.
 	 // Thus parse it directly.
-	  HAL_UART_Transmit(&huart7, 'Inter',5,0xFFFF);
+	  //HAL_UART_Transmit(&huart7, 'Inter',5,0xFFFF);
 	  HAL_GPIO_TogglePin(GPIOG, LD_H_Pin);
 	  HAL_UART_Transmit(&huart7, (char*)pdata, PACKLEN,0xFFFF);
 	  comm_pack=parse_all(pdata);
@@ -411,14 +417,14 @@ int32_t parse_pack_indv(char* pack, int pos, int lens){
 	    int32_t data = 0;
 	    memcpy(pdata_temp, pack, PACKLEN);
 
-	    if (pdata_temp[0] == 0xAA){ //check received correct pack head frame， modify here to 0xAA in real world test, 0x41 for tests in 'A'.
+	    //if (pdata_temp[0] == 0xAA){ //check received correct pack head frame， modify here to 0xAA in real world test, 0x41 for tests in 'A'.
 			for(int i=0; i<lens; i++){
-	            data += (int32_t)((pdata_temp[pos-i-1] - '0')*pow(10,i)); // decoding, referring to the vision code.
+	            data += (int32_t)((pdata_temp[pos-i-1-2] - '0')*pow(10,i)); // decoding, referring to the vision code.
 			}
-	    }
-		else{
-			data = -1;
-		}
+	    //}
+		//else{
+			//data = -1;
+		//}
 	    return data;
 }
 
@@ -533,7 +539,7 @@ comm_rx_info parse_all(char* pack)
 	Sentry_Pack.dist_data = 0;
 	Sentry_Pack.fire_cmd = 0;
 	Sentry_Pack.target_num = 0;
-	Sentry_Pack.pack_cond=PACKERR;
+	Sentry_Pack.pack_cond=PACKCOR;
 
 	//int position = 6;
 	//unsigned char data;
@@ -541,45 +547,45 @@ comm_rx_info parse_all(char* pack)
 
 //	if (strlen(pack) == PACKLEN)
 //	{
-		if (pack[0] == 0xAA) //start with 'A', use 0x41 for test, 0xAA for test with CE code
-		{
-			for (int i = 2; i< PACKLEN-1; i++)
-			{
-				if(pack[i]>='0' && pack[i] <= '9') // make sure each number is 0~9
-				{
-					Sentry_Pack.pack_cond = PACKCOR;
-				}
-				else
-				{
-					Sentry_Pack.pack_cond = PACKERR;
-					HAL_GPIO_WritePin(GPIOG, LD_D_Pin, RESET);
-					break;
-				}
-			}
-
-			if(pack[PACKLEN-1]=='0' || pack[PACKLEN-1] == '1') {// fire command is '0' or '1'
-				Sentry_Pack.pack_cond = PACKCOR;
-			}
-			else
-			{
-				Sentry_Pack.pack_cond = PACKERR;
-				HAL_GPIO_WritePin(GPIOG, LD_E_Pin, RESET);
-			}
-			//only when the format is correct, parse the packet
-			if(Sentry_Pack.pack_cond == PACKCOR)
-			{
+//		if (pack[0] == 0xAA) //start with 'A', use 0x41 for test, 0xAA for test with CE code
+//		{
+//			for (int i = 2; i< PACKLEN-1; i++)
+//			{
+//				if(pack[i]>='0' && pack[i] <= '9') // make sure each number is 0~9
+//				{
+//					Sentry_Pack.pack_cond = PACKCOR;
+//				}
+//				else
+//				{
+//					Sentry_Pack.pack_cond = PACKERR;
+//					HAL_GPIO_WritePin(GPIOG, LD_D_Pin, RESET);
+//					break;
+//				}
+//			}
+//
+//			if(pack[PACKLEN-1]=='0' || pack[PACKLEN-1] == '1') {// fire command is '0' or '1'
+//				Sentry_Pack.pack_cond = PACKCOR;
+//			}
+//			else
+//			{
+//				Sentry_Pack.pack_cond = PACKERR;
+//				HAL_GPIO_WritePin(GPIOG, LD_E_Pin, RESET);
+//			}
+//			//only when the format is correct, parse the packet
+//			if(Sentry_Pack.pack_cond == PACKCOR)
+//			{
 				Sentry_Pack.yaw_data=parse_pack_indv(pack,YAW_POS, DATALEN);
 				Sentry_Pack.pitch_data=parse_pack_indv(pack,PITCH_POS,DATALEN);
-				Sentry_Pack.dist_data=parse_pack_indv(pack,DIST_POS,DATALEN);
-				Sentry_Pack.target_num=parse_pack_indv(pack,TARGET_POS,STATELEN);
-				Sentry_Pack.fire_cmd=parse_pack_indv(pack,FCMD_POS,STATELEN);
-			}
-		}
-		else
-		{
-			Sentry_Pack.pack_cond = PACKERR;
-			HAL_GPIO_WritePin(GPIOG, LD_F_Pin, RESET);
-		}
+				//Sentry_Pack.dist_data=parse_pack_indv(pack,DIST_POS,DATALEN);
+				Sentry_Pack.target_num=1;
+				Sentry_Pack.fire_cmd=parse_pack_indv(pack,FCMD_POS-5,STATELEN);
+//			}
+//		}
+//		else
+//		{
+//			Sentry_Pack.pack_cond = PACKERR;
+//			HAL_GPIO_WritePin(GPIOG, LD_F_Pin, RESET);
+//		}
 //	}
 //	else
 //	{

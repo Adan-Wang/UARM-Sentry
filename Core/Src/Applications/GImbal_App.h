@@ -14,8 +14,8 @@
 #include "../buzzer.h"
 #include "../Device/Motor.h"
 
-#define PACKLEN  64
-#define DATALEN  4
+#define PACKLEN  32
+#define DATALEN  3
 #define STATELEN 1
 #define PACKCOR 0
 #define PACKERR 1
@@ -34,11 +34,11 @@
 #define FRONT_ANGLE 280 //Hard set front and back angles
 #define BACK_ANGLE 140
 
-#define YAW_POS 6
-#define PITCH_POS YAW_POS+DATALEN
-#define DIST_POS PITCH_POS+DATALEN
-#define TARGET_POS DIST_POS+STATELEN
-#define FCMD_POS TARGET_POS+STATELEN
+#define YAW_POS 16
+#define PITCH_POS 24
+#define DIST_POS 32
+//#define TARGET_POS DIST_POS+STATELEN
+#define FCMD_POS 8
 
 typedef struct {
 	int32_t yaw_data;
