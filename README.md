@@ -6,13 +6,14 @@ This is the test version of UARM sentry robot control code.
 
 UART
 
-* UART7: Enabled but not used.
+* UART7: Enabled but not used (typically used for debugging)
 * USART6: Used for receive packages from micro-computer (NVIC Interrupt)
   * Preempt Priority 5, Sub Priority 1 (Supposed to be lower than Chassis)
   * UART Pin Trigger
 
 Timer
 
+* TIM2: PWM Signal for shoot task
 * TIM4: PWM signal for shoot task (No interrupt)
 * TIM5: Increment uwTick (Interrupt), used for timeout for hardwares.
   * Triggered each 1/1000 s
@@ -26,4 +27,4 @@ Timer
 
 CAN:
 
-* Only used for driving chassis motor(s).
+* CAN1 used to drive Chassis, gimbal, and magazine loaders.
