@@ -18,8 +18,8 @@ void Shoot_Task_Func(void const * argument)
   /* USER CODE BEGIN 5 */
   /* Infinite loop */
   shoot_init();
-//  __HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_1,1050);
-//  __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_1,1050);
+  //__HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_1,1050);
+  //__HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_1,1050);
 //  osDelay(3000);
 //  buzzer_play_o_canada(300);
 //	HAL_TIM_PWM_Start(&htim4,TIM_CHANNEL_1);
@@ -91,7 +91,7 @@ void shoot_init(void){
 	__HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_1,MIN_PWM_ON_TIME);
 	osDelay(100);
 	__HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_1,MIN_PWM_ON_TIME);
-	osDelay(6000);
+	osDelay(1750);
 
 //	HAL_TIM_PWM_Stop(&htim4,TIM_CHANNEL_1);
 //	HAL_TIM_PWM_Stop(&htim2,TIM_CHANNEL_1);
