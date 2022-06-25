@@ -151,13 +151,13 @@ void Gimbal_Task_Function(void const * argument)
 
 	  			  if (patrol_dir==-1){
 	  				  pitch_state=PITCH_BACK;
-	  				  Motor_pid_set_angle(&motor_data[5],BACK_ANGLE,0.5*vmax/max_angle,0,0);
+	  				  Motor_pid_set_angle(&motor_data[5],BACK_ANGLE,1*vmax/max_angle,0,0); //Use 1*vmax/max_angle if you want max stiffness, can probably go above???havn't tested.
 	  				  HAL_GPIO_WritePin(GPIOG, LD_C_Pin, RESET);
 	  				  HAL_GPIO_WritePin(GPIOG, LD_D_Pin, SET);
 	  			  }
 	  			  else{
 	  				  pitch_state=PITCH_FRONT;
-	  				  Motor_pid_set_angle(&motor_data[5],FRONT_ANGLE,0.5*vmax/max_angle,0,0);
+	  				  Motor_pid_set_angle(&motor_data[5],FRONT_ANGLE,1*vmax/max_angle,0,0);
 	  				  HAL_GPIO_WritePin(GPIOG, LD_D_Pin, RESET);
 	  				  HAL_GPIO_WritePin(GPIOG, LD_C_Pin, SET);
 	  			  }
