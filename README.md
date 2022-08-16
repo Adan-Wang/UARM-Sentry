@@ -28,3 +28,6 @@ Timer
 CAN:
 
 * CAN1 used to drive Chassis, gimbal, and magazine loaders.
+
+Documentation Here:
+https://drive.google.com/drive/u/2/folders/1qJiWcmRDkHIVHLkYgO720UUe9NvElubI
