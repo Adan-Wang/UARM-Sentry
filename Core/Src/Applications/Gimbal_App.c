@@ -94,7 +94,7 @@ void Gimbal_Task_Function(void const * argument)
   for (int i=0;i<3000;++i){
 	        pitch_state=PITCH_FRONT;
 			Motor_pid_set_angle(&motor_data[4], INIT_YAW, vmax/max_angle,0,0);
-			Motor_pid_set_angle(&motor_data[5], FRONT_ANGLE, vmax/max_angle,0,0);
+			Motor_pid_set_angle(&motor_data[5], FRONT_ANGLE, 2*vmax/max_angle,0,0); //Using 2*P for pitch
 			osDelay(1);
 			//continue; //Keep initializing until its done
   }
@@ -211,7 +211,7 @@ void Gimbal_Task_Function(void const * argument)
 				  HAL_UART_Transmit(&huart7, &(abs_pitch), 2, 0xFFFF);
 				  HAL_UART_Transmit(&huart7, '\n', 1, 0xFFFF);
 				  Motor_pid_set_angle(&motor_data[4], abs_yaw, vmax/max_angle,0,0);
-				  Motor_pid_set_angle(&motor_data[5], abs_pitch, vmax/max_angle,0,0);
+				  Motor_pid_set_angle(&motor_data[5], abs_pitch, 2*vmax/max_angle,0,0); //Set to 2 to optimize change
 				  comm_pack.target_num=0;
 			  }
 			  else if (comm_pack.pack_cond==PACKERR){

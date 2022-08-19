@@ -28,7 +28,7 @@
 #define INIT_YAW 35
 #define INIT_PITCH 0
 #define YAW_MAX_HALF_DELTA 60
-#define PITCH_MAX_HALF_DELTA 45
+#define PITCH_MAX_HALF_DELTA 60 //Originally 45
 #define MAX_PITCH_CHANGE_TIME 5
 #define MAX_YAW_CHANGE_TIME 3
 #define FRONT_ANGLE 280 //Hard set front and back angles
