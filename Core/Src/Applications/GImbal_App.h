@@ -33,8 +33,8 @@
 #define MAX_YAW_CHANGE_TIME 3
 #define FRONT_ANGLE 280 //Hard set front and back angles
 #define BACK_ANGLE 280
-
-#define TGT_CONST 1000 //min time in ms for computer vision to take over
+//min time in ms for computer vision to take over
+#define TGT_CONST 500
 
 #define YAW_POS 16
 #define PITCH_POS 24
@@ -65,6 +65,7 @@ void SweepAndPatrol(void);
 void Gimbal_Task_Function(void const * argument);
 void CAN_Send_Gimbal(int16_t yaw_raw, int16_t pitch_raw);
 int32_t parse_pack(char* pack, char* yaw_data);
+double off_dist(double abs_angle);
 // void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart);
 
 double abs_pitch;

@@ -112,7 +112,7 @@ void Motor_pid_set_angle(Motor* motor, double angle, int32_t p, int32_t i, int32
 	double velocity=0;
 	double speed=0;
 
-	input_angle=round(angle/360*8192);
+	input_angle=floor(angle/360*8192);
 
 	get_Motor_buffer(motor, &temp_motor_buffer);
 

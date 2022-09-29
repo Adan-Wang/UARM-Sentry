@@ -17,15 +17,14 @@ void Chassis_Task_Func(void const * argument)
 
   int32_t direction = CLOCKWISE; // direction of motor
   double vel = 1250; //Velocity of motor
-  uint32_t cycles_s=2; //Time period is 1 seconds per cycle, 5=5 cycles=5s, the timer is controlled by TIM13
+  uint32_t cycles_s=1; //Time period is 1 seconds per cycle, 5=5 cycles=5s, the timer is controlled by TIM13
   first_loop=1;
   for(;;)
   {
 
 	 // Forever loop
-	  //motor_move_period(cycles_s, vel, direction);
+	  motor_move_period(cycles_s, vel, direction);
 	  first_loop=0;
-
   }
 }
 

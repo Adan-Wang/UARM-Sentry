@@ -21,6 +21,7 @@ extern UART_HandleTypeDef husart6;
 extern TIM_HandleTypeDef htim14;
 
 int16_t current_angle;
+double abs_pitch_offset=0.0;
 //Velocity, from -30000 to 30000
 int16_t velocity;
 
@@ -131,7 +132,7 @@ void Gimbal_Task_Function(void const * argument)
 	  	  if(comm_pack.target_num == 0){
 	  		  if (control_counter>0){ //For 1s after receiving message, continue to set angle
 				  Motor_pid_set_angle(&motor_data[4], abs_yaw, vmax/max_angle,0,0);
-				  Motor_pid_set_angle(&motor_data[5], abs_pitch, vmax/max_angle,0,0);
+				  Motor_pid_set_angle(&motor_data[5], (abs_pitch), 2*vmax/max_angle,0,0);
 	  			  control_counter--;
 	  		  }
 	  		  else{
@@ -171,14 +172,14 @@ void Gimbal_Task_Function(void const * argument)
 
 	  		  }
 
-
-
-
 	  	  }
 	  	  else{
 	  		 pitch_change_counter=0; //If there is a target, restart pitch and yaw counter
 	  		 yaw_change_counter=0;
 	  		 control_counter=TGT_CONST;
+	  		 abs_pitch_offset = off_dist(comm_pack.dist_data);
+
+	  		 abs_pitch += abs_pitch_offset;
 
 
 			  if (comm_pack.pack_cond==PACKCOR){
@@ -197,42 +198,51 @@ void Gimbal_Task_Function(void const * argument)
 
 					  if(abs(abs_pitch-runtime_pitch_max)<abs(abs_pitch-runtime_pitch_min)){ //Find the closer bound
 						  abs_pitch=runtime_pitch_max;
+						  HAL_GPIO_WritePin(GPIOG, LD_H_Pin, RESET);
+
 					  }
 					  else{
 						  abs_pitch=runtime_pitch_min;
+						  HAL_GPIO_WritePin(GPIOG, LD_G_Pin, RESET);
 					  }
-
 				  }
 
-
+				  abs_pitch_offset = off_dist(comm_pack.dist_data);
 				  //printf("yaw: %d pitch: %d \r \n", (int16_t)abs_yaw, (int16_t)abs_pitch);
-				  HAL_UART_Transmit(&huart7,  &(abs_yaw), 2, 0xFFFF);
-				  HAL_UART_Transmit(&huart7, '\n', 1, 0xFFFF);
-				  HAL_UART_Transmit(&huart7, &(abs_pitch), 2, 0xFFFF);
-				  HAL_UART_Transmit(&huart7, '\n', 1, 0xFFFF);
+				  //HAL_UART_Transmit(&huart7,  &(abs_yaw), 2, 0xFFFF);
+				  //HAL_UART_Transmit(&huart7, 'ABS_YAW\n', 1, 0xFFFF);
+				  //HAL_UART_Transmit(&huart7, &(abs_pitch), 2, 0xFFFF);
+				  //HAL_UART_Transmit(&huart7, 'ABS_PITCH\n', 1, 0xFFFF);
 				  Motor_pid_set_angle(&motor_data[4], abs_yaw, vmax/max_angle,0,0);
-				  Motor_pid_set_angle(&motor_data[5], abs_pitch, 2*vmax/max_angle,0,0); //Set to 2 to optimize change
+				  Motor_pid_set_angle(&motor_data[5], (abs_pitch), 2*vmax/max_angle,0,0); //Set to 2 to optimize change
 				  comm_pack.target_num=0;
 			  }
 			  else if (comm_pack.pack_cond==PACKERR){
+				  printf("Wrong Packet.\n");
 				  HAL_GPIO_WritePin(GPIOG, LD_F_Pin, RESET);
-
 			  }
-
-
 	  	  }
-
 		  osDelay(1);
   }
 
   /* USER CODE END Gimbal_Task_Function */
 }
 
+double off_dist(double dist){
+	//dist = dist / 100 ;
+	//safe check
+	if(dist < 1500)
+		dist = 1500;
+	else if (dist>2500)
+		dist = 2400;
+	return (7.7e-9*dist*dist*dist  -0.0000475162*dist*dist + 0.1020480339*dist  -61.5014249239);// (0.0101*dist*dist*dist -0.710*dist*dist + 17.477*dist-137.3615);
+}
+
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
 	 // When enter this callback function, the variable pdata has been filled with the received data.
 	 // Thus parse it directly.
 	  //HAL_UART_Transmit(&huart7, 'Inter',5,0xFFFF);
-	  HAL_GPIO_TogglePin(GPIOG, LD_H_Pin);
+
 	  //HAL_UART_Transmit(&huart7, (char*)pdata, PACKLEN,0xFFFF);
 	  comm_pack=parse_all(pdata);
 	  abs_yaw=angle_preprocess(&motor_data[4], comm_pack.yaw_data);
@@ -336,7 +346,6 @@ int16_t check_angle_smaller_than_min(int32_t input_angle, int16_t max_angle, int
 }
 
 void SweepAndPatrol(void){
-
 	Motor temp_motor_buffer;
 	int16_t rx_angle, i;
 	double vmax_patrol=20000;
@@ -391,8 +400,6 @@ int32_t parse_pack_indv(char* pack, int pos, int lens){
 			if (pdata_temp[pos-lens-2-1]=='0'){
 				data=-data;
 			}
-
-
 	    //}
 		//else{
 			//data = -1;
@@ -548,8 +555,8 @@ comm_rx_info parse_all(char* pack)
 //			{
 				Sentry_Pack.yaw_data=parse_pack_indv(pack,YAW_POS, DATALEN);
 				Sentry_Pack.pitch_data=parse_pack_indv(pack,PITCH_POS,DATALEN);
-				//Sentry_Pack.dist_data=parse_pack_indv(pack,DIST_POS,DATALEN);
-				Sentry_Pack.target_num=1;
+				Sentry_Pack.dist_data=parse_pack_indv(pack,DIST_POS,DATALEN);
+				Sentry_Pack.target_num=1; //hard-coding?
 				Sentry_Pack.fire_cmd=parse_pack_indv(pack,FCMD_POS-5,STATELEN);
 //			}
 //		}

@@ -27,8 +27,8 @@ void Shoot_Task_Func(void const * argument)
 
   //__HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_1,1050);
   //__HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_1,1050);
-  double fric_wheel_speed_percent=10; //DO NOT go above 20, friction wheel spins very fast and it could be dangerous. Only go above 20 if you KNOW what you are doing.
-  double mag_load_speed_percent=10;
+  double fric_wheel_speed_percent=0; //DO NOT go above 20, friction wheel spins very fast and it could be dangerous. Only go above 20 if you KNOW what you are doing.
+  double mag_load_speed_percent=0;
   int16_t input=500;
   int16_t shoot_counter=-1;
   //buzzer_play_o_canada(300);
