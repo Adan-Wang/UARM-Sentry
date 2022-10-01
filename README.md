@@ -54,7 +54,7 @@ This is the test version of UARM sentry robot control code.
 
 ## Debug Recommendation
 
-
+test something with UART
 
 
 
