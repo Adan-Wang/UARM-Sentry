@@ -16,6 +16,15 @@ The code presented here is the driver code to control all motors on the robot, t
 # The Sentry Robot
 A picture of the sentry robot can be seen below, along with some footage from test runs of the robot below. The robot has not yet been fully completed, as such, it is still a bit buggy.
 
+A video of the robot moving on the rail (Video Credit: Yulin Chang).
+
+https://user-images.githubusercontent.com/107214541/196596751-3cf63ca1-3fe1-41c0-a7d6-b2cb666b596e.mp4
+
+An early test video of the robot's tracking system (Video Credit: Rei Chen and Bailiang Liu) -- note that at that point in time, the robot's tracking system is not very good (you can see slight movement of the gun in the video). It has since been improved (will update video when there is a chance).
+
+https://user-images.githubusercontent.com/107214541/196597232-a9ddb22d-3940-4618-b887-a497ff3dac6d.mp4
+
+
 
 # Application Structure
 
