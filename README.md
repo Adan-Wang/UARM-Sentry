@@ -2,7 +2,7 @@
 
 This is the test version of UARM sentry robot control code, written in C for STM32F427 series controller. 
 
-This program was developed by myself and several other student colleagues at the University of Alberta, for the University of Alberta RoboMasters Club.
+This program was co-developed by myself and several other student colleagues at the University of Alberta, for the University of Alberta RoboMasters Club.
 
 This code is for the "sentry" robot in the "RoboMasters" competition.  
 
