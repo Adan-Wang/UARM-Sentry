@@ -1,16 +1,33 @@
 # UARM-EE-Sentry
 
-This is the test version of UARM sentry robot control code. 
+This is the test version of UARM sentry robot control code, written in C for STM32F427 series controller. 
 
-## Application Structure
+This program was developed by myself and several other student colleagues at the University of Alberta, for the University of Alberta RoboMasters Club.
+
+This code is for the "sentry" robot in the "RoboMasters" competition.  
+
+In the RoboMasters competition, two teams of opposing robots shoot rubber projectiles at each other in attempts to destroy the opposing team's base.
+
+The sentry robot is an automated robot that runs on a rail, it is capable of identifying and attacking opposing robots based on patterns on their armor plate.
+
+The code presented here is the driver code to control all motors on the robot, through the STM32 microcontroller. The code used to identify the armor plate, which is based on image recognition algorithms, is not included here.
+
+
+# The Sentry Robot
+A picture of the sentry robot can be seen below, along with some footage from test runs of the robot below. The robot has not yet been fully completed, as such, it is still a bit buggy.
+
+
+# Application Structure
+
+The code utilizes FreeRTOS, a real-time oeprating system, to handle different application codes at the same time.
 
 ### Chassis Application 
 
-​	Process the signal movement along the rail Timer interrupt and apply the value of 3508 motors using CAN.
+​	Process movement along the rail, uses interrupt and  to control M2006 Motors.
 
 ### Gimbal Application
 
-​	Receive and parse the packets sent by MINI PC through UART6. Then Apply the parsed absolute pitch/yaw angle as well as the fire command via CAN. <CURENTLY NO PACKET VERIFICATION PROCEFSS>
+​Receive and parse the packets sent by MINI PC through UART6. Then Apply the parsed absolute pitch/yaw angle as well as the fire command via CAN. (Need to implement verification procedures.)
 
 ### Shoot Application
 
@@ -36,31 +53,14 @@ This is the test version of UARM sentry robot control code.
 
 * TIM2: PWM Signal for shoot task
 * TIM4: PWM signal for shoot task (No interrupt)
-* TIM5: Increment uwTick (Interrupt), used for timeout for hardwares.
-  * Triggered each 1/1000 s
+* TIM5: Used for RTOS operating system
 * TIM12: Buzzer (No interrupt)
 * TIM13: 
   * Time counter for Chassis task (NVIC interrupt)
     * Preempt Priority 5, Sub Priority 0
     * Triggered each 1s
   * Ultrasound Sensor Timer - Not enabled
-* TIM14: Not used
 
 ### CAN
 
 * CAN1 used to drive Chassis, gimbal, and magazine loaders.
-
-
-
-## Debug Recommendation
-
-test something with UART
-
-
-
-
-
-
-
-Documentation Here:
-https://drive.google.com/drive/u/2/folders/1qJiWcmRDkHIVHLkYgO720UUe9NvElubI
